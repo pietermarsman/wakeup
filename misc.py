@@ -60,19 +60,17 @@ def play_audio_file(file):
 
 
 def fadeout_music(duration = 10):
+    print("Fading...")
     pygame.mixer.music.fadeout(duration * 1000)
 
 
 def ring_alarm():
-    print("Running!")
+    print("Ring!")
     play_audio_file(video_to_audio(
         download_youtube(search_youtube(choice(search_top40()))[0]),
         FILE_AUDIO))
 
 
-# todo stop music when pressing key
 # todo check if song already downloaded by hashing it's output
 # todo use separate folder in temp and use schedular to clean once in a while
-# todo use flask to control the alarms
-# todo pick song randomly
 # todo save by name

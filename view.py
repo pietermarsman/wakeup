@@ -1,25 +1,26 @@
+import datetime
+
 from flask import Flask, jsonify
 
 from alarmclock import AlarmClock
 
+alarm = AlarmClock()
+
 app = Flask(__name__)
 app.config['DEBUG'] = True
-
-alarm = AlarmClock()
-alarm.start()
 
 
 def get_state():
     json_state = {'instructions': {'set alarm': ['/alarm/<string:time>'],
                                    'snooze alarm': ['/snooze',
                                                     '/snooze/<int:duration>'],
-                                   'stop alarm' : ['/stop']},
-                  'alarm': str(alarm.jobs)}
+                                   'stop alarm': ['/stop']},
+                  'alarm': str(alarm.jobs), 'time': datetime.datetime.now()}
     return jsonify(json_state)
 
 
 @app.route('/')
-def instruction():
+def index():
     return get_state()
 
 
@@ -35,6 +36,7 @@ def snooze(duration=5):
     alarm.snooze(duration)
     return get_state()
 
+
 @app.route("/stop")
 def stop_alarm():
     alarm.stop()
@@ -42,4 +44,5 @@ def stop_alarm():
 
 
 if __name__ == "__main__":
+    alarm.start()
     app.run(host='0.0.0.0')
