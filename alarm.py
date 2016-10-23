@@ -1,11 +1,9 @@
+import time
 from threading import Thread
 
-import schedule
-import time
 from schedule import Scheduler
 
 from misc import ring_alarm
-
 
 
 def run_threaded(job_func):
@@ -14,7 +12,6 @@ def run_threaded(job_func):
 
 
 class Alarm(Thread, Scheduler):
-
     def __init__(self):
         super(Alarm, self).__init__()
         Scheduler.__init__(self)
