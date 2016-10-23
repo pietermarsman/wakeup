@@ -3,6 +3,7 @@ import re
 import subprocess
 import urllib
 from random import choice
+from threading import Thread
 
 import pygame
 from bs4 import BeautifulSoup
@@ -56,14 +57,17 @@ def play_audio_file(file):
     pygame.mixer.init()
     pygame.mixer.music.load(file)
     pygame.mixer.music.play(-1)
-    while pygame.mixer.music.get_busy():
-        continue
+
+
+def fadeout_music(duration = 10):
+    pygame.mixer.music.fadeout(duration * 1000)
 
 
 def ring_alarm():
     print("Running!")
-    play_audio_file(video_to_audio(download_youtube(search_youtube(choice(
-        search_top40()))[0]), FILE_AUDIO))
+    play_audio_file(video_to_audio(
+        download_youtube(search_youtube(choice(search_top40()))[0]),
+        FILE_AUDIO))
 
 
 # todo stop music when pressing key
