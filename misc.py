@@ -15,6 +15,7 @@ FILE_AUDIO = '/tmp/youtube_audio.mp3'
 
 
 def search_top40():
+    print('searching top40')
     url = 'http://www.top40.nl/top40'
     response = urllib.request.urlopen(url)
     html = response.read()
@@ -26,6 +27,7 @@ def search_top40():
 
 
 def search_youtube(text):
+    print('searching youtube')
     quoted_text = urllib.parse.quote(text)
     url = YOUTUBE_URL + "/results?search_query=" + quoted_text
     response = urllib.request.urlopen(url)
@@ -38,6 +40,7 @@ def search_youtube(text):
 
 
 def download_youtube(url):
+    print('downloading youtube')
     yt = YouTube(url)
     video = yt.filter("mp4")[0]
     video.download(FILE_VIDEO, force_overwrite=True)
@@ -45,6 +48,7 @@ def download_youtube(url):
 
 
 def video_to_audio(in_file, out_file):
+    print('converting video to audio')
     command = 'ffmpeg -i ' + in_file + ' -vn -y ' + out_file
     FNULL = open(os.devnull, 'w')
     subprocess.call(command, shell=True, stdout=FNULL, stderr=subprocess.STDOUT)
@@ -52,13 +56,14 @@ def video_to_audio(in_file, out_file):
 
 
 def play_audio_file(file):
+    print('playing song')
     pygame.mixer.init()
     pygame.mixer.music.load(file)
     pygame.mixer.music.play(-1)
 
 
 def fadeout_music(duration = 10):
-    print("Fading...")
+    print("fading song")
     pygame.mixer.music.fadeout(duration * 1000)
 
 
