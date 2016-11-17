@@ -4,18 +4,19 @@ from flask import Flask, jsonify
 
 from alarmclock import AlarmClock
 
-alarm = AlarmClock()
-
+alarm = AlarmClock('top40')
 app = Flask(__name__)
-app.config['DEBUG'] = True
 
 
 def get_state():
-    json_state = {'instructions': {'set alarm': ['/alarm/<string:time>'],
-                                   'snooze alarm': ['/snooze',
-                                                    '/snooze/<int:duration>'],
-                                   'stop alarm': ['/stop']},
-                  'alarm': str(alarm.jobs), 'time': datetime.datetime.now()}
+    json_state = {
+        'instructions': {'set alarm': ['/alarm/<int:hour>/<int:minute>',
+                                       '/alarm/<string:day>/<int:hour>/<int:minute>'],
+            'snooze alarm': ['/snooze', '/snooze/<int:duration>'],
+            'stop alarm': ['/stop'],
+            'change alarm type': ['/alarm_type/<str:alarm_type>'],
+                         'remove alarm': ['/remove/<int:i>']},
+        'state': alarm.jsonify(), 'time': datetime.datetime.now()}
     return jsonify(json_state)
 
 
@@ -24,9 +25,16 @@ def index():
     return get_state()
 
 
-@app.route("/alarm/<string:time>")
-def set_alarm(time):
-    alarm.set_single_alarm(time)
+@app.route('/alarm/<string:day>/<int:hour>/<int:minute>')
+@app.route("/alarm/<int:hour>/<int:minute>")
+def set_alarm(hour, minute, day=None):
+    alarm.set_single_alarm('%.2d:%.2d' % (hour, minute), day)
+    return get_state()
+
+
+@app.route('/remove/<int:i>')
+def remove_alarm(i):
+    alarm.remove_single_alarm(i)
     return get_state()
 
 
@@ -43,6 +51,13 @@ def stop_alarm():
     return get_state()
 
 
+@app.route('/alarm_type/<string:alarm_type>')
+def change_alarm_type(alarm_type):
+    alarm.alarm_type = alarm_type
+    return get_state()
+
+
 if __name__ == "__main__":
     alarm.start()
+    app.config['DEBUG'] = True
     app.run(host='0.0.0.0')
