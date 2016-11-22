@@ -18,9 +18,19 @@ def run_threaded_once(job_func):
 
 
 def top40_alarm():
-    play_audio_file(video_to_audio(
-        download_youtube(search_youtube(choice(search_top40()))[0]),
-        FILE_AUDIO))
+    succes = False
+    while not succes:
+        try:
+            hits = search_top40()
+            hit = choice(hits)
+            youtube_url = search_youtube(hit)[0]
+            download_path = download_youtube(youtube_url)
+            audio_path = video_to_audio(download_path, FILE_AUDIO)
+            play_audio_file(audio_path)
+            succes = True
+        except Exception as e:
+            print(e)
+            succes = False
 
 
 def youtube_alarm(search_string):
