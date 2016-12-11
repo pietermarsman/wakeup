@@ -3,26 +3,30 @@ import datetime
 import flask
 from flask import Flask, jsonify
 from flask import redirect
-from flask_login import login_required, LoginManager, login_user,\
-    logout_user, current_user
+from flask_login import login_required, LoginManager, login_user, logout_user, \
+    current_user
 
 from alarmclock import AlarmClock
 from user import User
 
+context = ('/home/pieter/other/certificates/server.crt',
+           '/home/pieter/other/certificates/server.key')
+
 login_manager = LoginManager()
 alarm = AlarmClock('top40')
+
 app = Flask(__name__)
+app.secret_key = 'pietersecretkey'
 
 
 def get_state():
-    json_state = {
-        'instructions': {'set alarm': ['/alarm/<int:hour>/<int:minute>',
-                                       '/alarm/<string:day>/<int:hour>/<int:minute>'],
-            'snooze alarm': ['/snooze', '/snooze/<int:duration>'],
-            'stop alarm': ['/stop'],
-            'change alarm type': ['/alarm_type/<str:alarm_type>'],
-                         'remove alarm': ['/remove/<int:i>']},
-        'state': alarm.jsonify(),
+    json_state = {'instructions': {
+        'set alarm': ['/alarm/<int:hour>/<int:minute>',
+                      '/alarm/<string:day>/<int:hour>/<int:minute>'],
+        'snooze alarm': ['/snooze', '/snooze/<int:duration>'],
+        'stop alarm': ['/stop'],
+        'change alarm type': ['/alarm_type/<str:alarm_type>'],
+        'remove alarm': ['/remove/<int:i>']}, 'state': alarm.jsonify(),
         'user': {'logged_in': current_user.is_authenticated},
         'time': datetime.datetime.now()}
     return jsonify(json_state)
@@ -95,7 +99,5 @@ def change_alarm_type(alarm_type):
 
 if __name__ == "__main__":
     alarm.start()
-    app.secret_key = 'mysupersecretkey'
-    app.config['DEBUG'] = True
     login_manager.init_app(app)
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', debug=True, ssl_context=context)
