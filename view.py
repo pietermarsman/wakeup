@@ -7,8 +7,7 @@ from flask_httpauth import HTTPBasicAuth
 
 from alarmclock import AlarmClock
 
-context = ('/home/pieter/other/certificates/server.crt',
-           '/home/pieter/other/certificates/server.key')
+from args import context
 
 alarm = AlarmClock('top40')
 

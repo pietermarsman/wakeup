@@ -121,8 +121,8 @@ class YoutubeAlarm(Thread):
 class Top40YoutubeAlarm(YoutubeAlarm):
     TOP40_URL = 'http://www.top40.nl/top40'
 
-    def __init__(self, audio_mixer, tmp_video_file, tmp_audio_file):
-        super().__init__(None, audio_mixer, tmp_video_file, tmp_audio_file)
+    def __init__(self, audio_mixer):
+        super().__init__(None, audio_mixer)
         self.audio_mixer = audio_mixer
         self.songs = None
 
