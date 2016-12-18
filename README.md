@@ -13,7 +13,7 @@ Raspberry pi alarm clock with top40 songs
 ```
 sudo apt-get install python3-dev python3-numpy python3-pyqt4
 
-pip install schedule Flask pytube beautifulsoup4 lxml OpenSSL
+pip install schedule Flask pytube beautifulsoup4 lxml pyOpenSSL
 
 hg clone https://bitbucket.org/pygame/pygame 
 cd pygame
