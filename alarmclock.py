@@ -19,7 +19,6 @@ from lxml import html
 
 
 class Render(QWebPage):
-
     def __init__(self, url):
         self.app = QApplication(sys.argv)
         QWebPage.__init__(self)
@@ -43,8 +42,7 @@ class YoutubeAlarm(Thread):
     CLASS_LINK = 'yt-uix-tile-link'
     SAVE_FOLDER = "/tmp"
 
-    def __init__(self, search_term, audio_mixer, tmp_video_file,
-                 tmp_audio_file):
+    def __init__(self, search_term, audio_mixer):
         super().__init__()
         self.search_term = search_term
         self.audio_mixer = audio_mixer
@@ -58,16 +56,16 @@ class YoutubeAlarm(Thread):
     @property
     def file_video(self):
         file_prefix = YoutubeAlarm.save_file_name(self.search_term)
-        file_name =  file_prefix + "_video.mp4"
+        file_name = file_prefix + "_video.mp4"
         file_path = os.path.join(YoutubeAlarm.SAVE_FOLDER, file_name)
-        return(file_path)
+        return (file_path)
 
     @property
     def file_audio(self):
         file_prefix = YoutubeAlarm.save_file_name(self.search_term)
-        file_name =  file_prefix + "_audio.mp3"
+        file_name = file_prefix + "_audio.mp3"
         file_path = os.path.join(YoutubeAlarm.SAVE_FOLDER, file_name)
-        return(file_path)
+        return (file_path)
 
     def audio_is_downloaded(self):
         return os.path.isfile(self.file_audio)
@@ -204,6 +202,7 @@ class AlarmClock(Thread, Scheduler):
             thread_obj.start()
             if once:
                 return CancelJob
+
         return func
 
 

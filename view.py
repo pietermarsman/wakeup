@@ -7,14 +7,10 @@ from flask_httpauth import HTTPBasicAuth
 
 from alarmclock import AlarmClock
 
-FILE_VIDEO = '/tmp/youtube_video.mp4'
-FILE_AUDIO = '/tmp/youtube_audio.mp3'
-
 context = ('/home/pieter/other/certificates/server.crt',
            '/home/pieter/other/certificates/server.key')
 
-alarm = AlarmClock('top40', tmp_video_file=FILE_VIDEO,
-                   tmp_audio_file=FILE_AUDIO)
+alarm = AlarmClock('top40')
 
 app = Flask(__name__)
 app.secret_key = 'pietersecretkey'
@@ -61,6 +57,7 @@ def set_alarm(hour=None, minute=None, day=None):
     else:
         alarm.set_single_alarm('%.2d:%.2d' % (hour, minute), day)
     return redirect("/", code=302)
+
 
 @app.route('/remove/<int:i>')
 @auth.login_required
