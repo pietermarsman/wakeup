@@ -201,10 +201,3 @@ class AudioMixerFactory(object):
         if AudioMixerFactory.mixer is None:
             AudioMixerFactory.mixer = AudioMixerFactory.AudioMixer()
         return AudioMixerFactory.mixer
-
-audio_mixer = AudioMixerFactory.get_mixer()
-alarm = Top40YoutubeAlarm(audio_mixer, '/tmp/video.mp4', '/tmp/audio.mp3')
-alarm.start()
-
-while True:
-    time.sleep(1)
