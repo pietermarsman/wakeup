@@ -38,24 +38,49 @@ class Render(QWebPage):
 
 class YoutubeAlarm(Thread):
     YOUTUBE_SEARCH = 'https://www.youtube.com/results?search_query=%s'
-    YOUTUBE_WATCH = 'https://www.youtube.com/%s'
+    YOUTUBE_WATCH = 'https://www.youtube.com%s'
     CLASS_VIDEO = 'yt-lockup-video'
     CLASS_LINK = 'yt-uix-tile-link'
+    SAVE_FOLDER = "/tmp"
 
     def __init__(self, search_term, audio_mixer, tmp_video_file,
                  tmp_audio_file):
         super().__init__()
         self.search_term = search_term
         self.audio_mixer = audio_mixer
-        self.file_video = tmp_video_file
-        self.file_audio = tmp_audio_file
         self.songs = None
         self.youtube_links = None
 
+    @staticmethod
+    def save_file_name(text):
+        return re.sub(r"\W", "", text)
+
+    @property
+    def file_video(self):
+        file_prefix = YoutubeAlarm.save_file_name(self.search_term)
+        file_name =  file_prefix + "_video.mp4"
+        file_path = os.path.join(YoutubeAlarm.SAVE_FOLDER, file_name)
+        return(file_path)
+
+    @property
+    def file_audio(self):
+        file_prefix = YoutubeAlarm.save_file_name(self.search_term)
+        file_name =  file_prefix + "_audio.mp3"
+        file_path = os.path.join(YoutubeAlarm.SAVE_FOLDER, file_name)
+        return(file_path)
+
+    def audio_is_downloaded(self):
+        return os.path.isfile(self.file_audio)
+
+    def video_is_downloaded(self):
+        return os.path.isfile(self.file_video)
+
     def run(self):
-        self.search_youtube()
-        self.download_youtube(self.youtube_links[0])
-        self.video_to_audio()
+        if not self.video_is_downloaded():
+            self.search_youtube()
+            self.download_youtube(self.youtube_links[0])
+        if not self.audio_is_downloaded():
+            self.video_to_audio()
         self.play()
 
     def search_youtube(self):
@@ -138,6 +163,9 @@ class AlarmClock(Thread, Scheduler):
             self.run_pending()
             time.sleep(1)
 
+    def run_alarm_now(self):
+        AlarmClock.run_thread(True)(self.song_type_func())
+
     def set_single_alarm(self, t, day=None):
         if day is None:
             self.every().day.at(t).do(AlarmClock.run_thread(True),
@@ -185,8 +213,9 @@ class AudioMixerFactory(object):
             pass
 
         def play_audio_file(self, file):
-            print('playing song')
+            print('playing %s' % file)
             pygame.mixer.init()
+            pygame.mixer.stop()
             pygame.mixer.music.load(file)
             pygame.mixer.music.play(-1)
 

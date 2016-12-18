@@ -53,11 +53,14 @@ def index():
 
 @app.route('/alarm/<string:day>/<int:hour>/<int:minute>')
 @app.route("/alarm/<int:hour>/<int:minute>")
+@app.route('/alarm/now')
 @auth.login_required
-def set_alarm(hour, minute, day=None):
-    alarm.set_single_alarm('%.2d:%.2d' % (hour, minute), day)
+def set_alarm(hour=None, minute=None, day=None):
+    if hour is None and minute is None and day is None:
+        alarm.run_alarm_now()
+    else:
+        alarm.set_single_alarm('%.2d:%.2d' % (hour, minute), day)
     return redirect("/", code=302)
-
 
 @app.route('/remove/<int:i>')
 @auth.login_required
