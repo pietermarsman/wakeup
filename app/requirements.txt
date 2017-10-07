@@ -4,3 +4,4 @@ pytube
 beautifulsoup4
 lxml
 pygame
+django
