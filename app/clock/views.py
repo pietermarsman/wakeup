@@ -4,7 +4,7 @@ from django.shortcuts import render
 
 
 class AlarmClock(Thread, Scheduler):
-    def __init__(self, song_type='top40', **kwargs):
+    def __init__(self, song_type='downloader', **kwargs):
         super(AlarmClock, self).__init__()
         Scheduler.__init__(self)
         self.alarm_type = song_type
@@ -42,7 +42,7 @@ class AlarmClock(Thread, Scheduler):
         self.audio_mixer.fadeout_music()
 
     def song_type_func(self):
-        if self.alarm_type is 'top40':
+        if self.alarm_type is 'downloader':
             return Top40YoutubeAlarm(self.audio_mixer, **self.kwargs)
         else:
             return YoutubeAlarm(self.alarm_type, self.audio_mixer,
@@ -71,7 +71,7 @@ from alarmclock import AlarmClock
 
 from args import context
 
-alarm = AlarmClock('top40')
+alarm = AlarmClock('downloader')
 
 app = Flask(__name__)
 app.secret_key = 'pietersecretkey'

@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 
-from top40.models import Top40Song
-from top40.top40 import extract_top40_songs
+from downloader.models import Top40Song
+from downloader.top40 import extract_top40_songs
 
 
 class Command(BaseCommand):

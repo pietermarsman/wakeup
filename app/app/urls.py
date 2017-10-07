@@ -18,5 +18,5 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'top40/', include('top40.urls'))
+    url(r'^', include('downloader.urls'))
 ]
