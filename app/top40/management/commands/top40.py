@@ -1,12 +1,12 @@
-import re
 from urllib.request import urlopen
 
 from bs4 import BeautifulSoup
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 
 
 # import additional classes/modules as needed
-# from myapp.models import Book
+from top40.models import Top40Song
+
 
 class Command(BaseCommand):
     help = 'My custom django management command'
@@ -23,12 +23,12 @@ class Command(BaseCommand):
         soup = BeautifulSoup(html, "lxml")
         song_divs = soup.findAll(attrs={'class': 'song-details'})
 
-        songs = []
         for song_div in song_divs:
             title_elem = song_div.find(attrs={'class': 'title'})
-            author_elem = song_div.find(attrs={'class': 'artist'})
+            artist = song_div.find(attrs={'class': 'artist'})
 
-            if title_elem is not None and author_elem is not None:
-                songs.append((title_elem.text.strip(), author_elem.text.strip()))
-
-        print(songs)
+            if title_elem is not None and artist is not None:
+                Top40Song.objects.get_or_create(
+                    song=title_elem.text.strip(),
+                    artist=artist.text.strip()
+                )
