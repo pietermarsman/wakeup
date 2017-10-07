@@ -1,11 +1,7 @@
-from urllib.request import urlopen
-
-from bs4 import BeautifulSoup
 from django.core.management.base import BaseCommand
 
-
-# import additional classes/modules as needed
 from top40.models import Top40Song
+from top40.top40 import extract_top40_songs
 
 
 class Command(BaseCommand):
@@ -16,19 +12,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         url = options['url']
+        songs = extract_top40_songs(url)
 
-        with urlopen(url) as f:
-            html = f.read()
-
-        soup = BeautifulSoup(html, "lxml")
-        song_divs = soup.findAll(attrs={'class': 'song-details'})
-
-        for song_div in song_divs:
-            title_elem = song_div.find(attrs={'class': 'title'})
-            artist = song_div.find(attrs={'class': 'artist'})
-
-            if title_elem is not None and artist is not None:
-                Top40Song.objects.get_or_create(
-                    song=title_elem.text.strip(),
-                    artist=artist.text.strip()
-                )
+        for song in songs:
+            Top40Song.objects.get_or_create(**song)
