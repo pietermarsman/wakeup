@@ -47,3 +47,6 @@ class YoutubeClip(models.Model):
 class Download(models.Model):
     clip = models.ForeignKey(YoutubeClip, on_delete=models.CASCADE)
     path = models.FilePathField()
+
+    def __str__(self):
+        return '%s - %s' % (self.clip.song.artist, self.clip.song.title)

@@ -1,8 +1,0 @@
-<h1>Top 40 songs</h1>
-<ul>
-{% for song in object_list %}
-    <li>{{ song.first_appeared|date }} - {{ song.artist }} - {{ song.title }}</li>
-{% empty %}
-    <li>No articles yet.</li>
-{% endfor %}
-</ul>

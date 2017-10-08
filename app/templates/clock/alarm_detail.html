@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div>
+    <a href="/alarms/{{ alarm.pk }}/">
+        <h2>
+            At {{ alarm.datetime }}
+        </h2>
+        <p>
+            play {{ alarm.download }}
+        </p>
+    </a>
+    <a href="/alarms/{{ alarm.pk }}/edit/">
+        <span>
+            edit
+        </span>
+    </a>
+    -
+    <a href="/alarms/{{ alarm.pk }}/delete/">
+        <span>
+            delete
+        </span>
+    </a>
+</div>
+{% endblock %}

@@ -6,3 +6,4 @@ lxml
 pygame
 django
 pyqt5
+django-datetime-widget

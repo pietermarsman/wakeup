@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Alarms</h1>
+<a href="/alarms/new/">
+    Create new alarm
+</a>
+<ul>
+    {% for alarm in object_list %}
+    {% include 'clock/alarm_detail.html' with alarm=alarm %}
+    {% empty %}
+    <li>No alarms yet.</li>
+    {% endfor %}
+</ul>
+{% endblock %}
